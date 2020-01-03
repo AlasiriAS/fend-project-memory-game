@@ -46,7 +46,7 @@ setInterval(updateTime, 1000);
 
 // retart icon
 myRestart.addEventListener('click', retry);
-addIcons();
+//addIcons();
 retry();
 
 // function to make all the cards closed down
@@ -78,8 +78,13 @@ function shuffleCards() {
 
 function cardClick() {
     if (chechMatch.length <= 1) {
-        this.className = 'card open show';
-        chechMatch.push(this);
+    	if (this.className === 'card open show'){
+    		// same opened card, don't take it again
+    	}
+        else {
+        	this.className = 'card open show';
+        	chechMatch.push(this);
+        }
     }
 
     if (chechMatch.length > 1) {
@@ -157,6 +162,7 @@ function allMatched() {
 
 // function to restart 
 function retry() {
+	addIcons();
     shuffleCards();
     closeCards();
     myMoves.textContent = 0;
