@@ -26,7 +26,6 @@ function shuffle(array) {
 }
 
 const myCard = document.querySelectorAll('.card');
-//console.log(myCard);
 
 let cardIcons = [];
 let chechMatch = [];
@@ -35,19 +34,44 @@ const myMoves = document.querySelector('.moves');
 const myStars = document.querySelector('.stars');
 const myRestart = document.querySelector('.restart');
 const myTime = document.querySelector('.time');
-//console.log(myRestart);
 myMoves.textContent = 0; //reset the moves 
 let numberOfMoves = 0;
+let numberOfStars = 3;
 let numberOfMatched = 0;
 let sec = 0;
 let min = 0;
 // Time Interval
-setInterval(updateTime, 1000);
+let myTimeInterval = setInterval(updateTime, 1000);
 
 // retart icon
 myRestart.addEventListener('click', retry);
-//addIcons();
 retry();
+
+// Get the modal
+let modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+let btn = document.getElementById("playAgain");
+
+// Get the <span> element that closes the modal
+let span = document.getElementsByClassName("close")[0];
+
+btn.onclick = function() {
+    retry();
+    modal.style.display = "none";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 
 // function to make all the cards closed down
 function closeCards() {
@@ -78,12 +102,11 @@ function shuffleCards() {
 
 function cardClick() {
     if (chechMatch.length <= 1) {
-    	if (this.className === 'card open show'){
-    		// same opened card, don't take it again
-    	}
-        else {
-        	this.className = 'card open show';
-        	chechMatch.push(this);
+        if (this.className === 'card open show') {
+            // same opened card, don't take it again
+        } else {
+            this.className = 'card open show';
+            chechMatch.push(this);
         }
     }
 
@@ -99,7 +122,6 @@ function cardClick() {
 // function for the currect match
 function currectMatch() {
     // correct try, add match to them, and remove the EventListener
-    ///console.log(chechMatch[0].children[0].className);
     chechMatch[0].classList.toggle('match');
     chechMatch[1].classList.toggle('match');
     chechMatch[0].removeEventListener('click', cardClick);
@@ -128,9 +150,11 @@ function updateMove() {
 
     // if from 8-11 : 3 stars! , 12-17 2, rest 1 star
     if (numberOfMoves === 12) {
-        myStars.removeChild(myStars.children[0]);
+        numberOfStars--;
+        myStars.children[0].style.visibility = "collapse";
     } else if (numberOfMoves === 18) {
-        myStars.removeChild(myStars.children[0]);
+        numberOfStars--;
+        myStars.children[1].style.visibility = "collapse";
     }
 }
 
@@ -149,27 +173,34 @@ function updateTime() {
     }
 
 }
-
 // checking if all cards are matched
 function allMatched() {
-    if (numberOfMatched === 8) {
-        alert("Nice Work! You have Won! \n\nYou have got " + myStars.children.length + " Stars!" +
-            "\nYour time is " + myTime.textContent +
-            "\nNumber of moves: " + numberOfMoves + "\nWant to play again? :)");
-        // update how you show Stars, maybe use another way for the message than alert
+    if (numberOfMatched === 1) {
+        // stop time counter
+        clearInterval(myTimeInterval);
+        //showing message model 
+        document.querySelector('.starNum').innerHTML = numberOfStars;
+        document.querySelector('.timer').innerHTML = myTime.textContent;
+        document.querySelector('.movesNum').innerHTML = numberOfMoves;
+        modal.style.display = "block";
     }
 }
 
 // function to restart 
 function retry() {
-	addIcons();
+    addIcons();
     shuffleCards();
     closeCards();
     myMoves.textContent = 0;
     numberOfMoves = 0;
     numberOfMatched = 0;
     // reseting stars
+    numberOfStars = 3;
+    myStars.children[0].style.visibility = "visible";
+    myStars.children[1].style.visibility = "visible";
     // reseting time
+    clearInterval(myTimeInterval);
+    myTimeInterval = setInterval(updateTime, 1000);
     sec = 0;
     min = 0;
 }
