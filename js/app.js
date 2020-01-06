@@ -175,7 +175,7 @@ function updateTime() {
 }
 // checking if all cards are matched
 function allMatched() {
-    if (numberOfMatched === 1) {
+    if (numberOfMatched === 8) {
         // stop time counter
         clearInterval(myTimeInterval);
         //showing message model 
